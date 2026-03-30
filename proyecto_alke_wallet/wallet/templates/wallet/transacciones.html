@@ -1,0 +1,59 @@
+{% extends 'wallet/base.html' %}{% load clp_filters %}
+{% block titulo %}Transacciones - AlkeWallet{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Historial de transacciones</h2><a href="{% url 'crear_transaccion' %}" class="btn btn-primary">Nueva
+        transferencia</a>
+</div>
+<div class="card">
+    <div class="card-body">
+        {% if transacciones %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Destino / origen</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in transacciones %}
+                    <tr>
+                        <td>#{{ trans.id }}</td>
+                        <td>{{ trans.fecha|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if trans.tipo == 'deposito' %}
+                            <span class="badge bg-success">Depósito</span>
+                            {% elif trans.usuario_emisor == user %}
+                            <span class="badge bg-danger">Enviado</span>
+                            {% else %}
+                            <span class="badge bg-info">Recibido</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trans.tipo == 'deposito' %}--{% elif trans.usuario_emisor == user %}
+                            {{trans.cuenta_destino.alias }}
+                            {% else %}
+                            {{ trans.usuario_emisor.username }}
+                            {% endif %}
+                        </td>
+                        <td>{{ trans.descripcion|default:"--" }}</td>
+                        <td>{% if trans.tipo == 'deposito' or trans.cuenta_destino.usuario_alke_relacionado == user %}
+                            <span class="text-success fw-bold">+{{ trans.monto|clp }}</span>
+                            {% else %}
+                            <span class="text-danger fw-bold">-{{ trans.monto|clp }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}<p class="mb-0">No tienes transacciones todavía.</p>{% endif %}
+    </div>
+</div>
+{% endblock %}

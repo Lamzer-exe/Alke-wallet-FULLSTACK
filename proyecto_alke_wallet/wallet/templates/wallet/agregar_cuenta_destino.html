@@ -1,0 +1,71 @@
+{% extends 'wallet/base.html' %} 
+{% block titulo %}Agregar cuenta destino - AlkeWallet{% endblock %} 
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Agregar cuenta destino</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alias</label>
+                            {{ form.alias }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Titular</label>
+                            {{ form.titular }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">RUT</label>
+                            {{ form.rut }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Correo</label>
+                            {{ form.correo }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Banco</label>
+                            {{ form.banco }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de cuenta</label>
+                            {{form.tipo_cuenta }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número de cuenta</label>
+                        {{form.numero_cuenta }}
+                    </div>
+                    <div class="form-check mb-3">
+                        {{ form.es_usuario_alke }}
+                        <label class="form-check-label" for="{{ form.es_usuario_alke.id_for_label }}">
+                            ¿Es usuario de AlkeWallet?
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Usuario de AlkeWallet</label>
+                        {{form.usuario_alke_relacionado }}
+                        {% if form.usuario_alke_relacionado.errors %}
+                            <div class="text-danger small">
+                                {{ form.usuario_alke_relacionado.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Guardar cuenta</button>
+                        <a href="{% url 'cuentas_destino' %}" class="btn btn-outline-secondary">Volver</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+dist/
+build/
+
+# Variables de entorno
+.env
+
+# Archivos temporales de editores
+*~
+*.tmp

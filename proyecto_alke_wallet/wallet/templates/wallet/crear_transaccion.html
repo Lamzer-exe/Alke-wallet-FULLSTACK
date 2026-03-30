@@ -1,0 +1,54 @@
+{% extends 'wallet/base.html' %}
+{% load clp_filters %} {% block titulo %}Transferir - AlkeWallet{% endblock %} 
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Transferir dinero</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Tu saldo disponible:</strong> {{ saldo_actual|clp }}
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">
+                            {{ form.cuenta_destino.label }}
+                        </label>
+                        {{form.cuenta_destino }}
+                        {% if form.cuenta_destino.errors %}
+                            <div class="text-danger small">
+                                {{ form.cuenta_destino.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.monto.label }}</label>
+                        {{form.monto }}
+                        {% if form.monto.errors %}
+                            <div class="text-danger small">
+                                {{ form.monto.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            {{ form.descripcion.label }}
+                        </label>
+                        {{form.descripcion }}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            Realizar transferencia
+                        </button>
+                        <a href="{% url 'cuentas_destino' %}" class="btn btn-outline-primary">Administrar cuentas destino</a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

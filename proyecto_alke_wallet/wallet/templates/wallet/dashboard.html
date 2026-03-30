@@ -1,0 +1,125 @@
+{% extends 'wallet/base.html' %}{% load clp_filters %}
+{% block titulo %}Dashboard - AlkeWallet{% endblock %}
+{% block contenido %}
+<div class="row">
+    <div class="col-12">
+        <h2>Hola, {{ user.first_name|default:user.username }}!</h2>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <h5 class="card-title">Tu saldo</h5>
+                <h2 class="display-6">{{ cuenta.saldo|clp }}</h2>
+                <p class="small">Moneda: CLP</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Acciones</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'crear_transaccion' %}" class="btn btn-success">Transferir</a>
+                    <a href="{% url 'depositar' %}" class="btn btn-outline-primary">Depositar</a>
+                    <a href="{% url 'cuentas_destino' %}" class="btn btn-outline-secondary">Cuentas destino</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Tu cuenta</h5>
+                <p><strong>Usuario:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Cuentas destino recientes</h5>
+    </div>
+    <div class="card-body">
+        {% if cuentas_destino %}
+        <ul class="list-group">
+            {% for cuenta_destino in cuentas_destino %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><strong>{{cuenta_destino.alias }}</strong> - 
+                    {{ cuenta_destino.get_banco_display }} / 
+                    {{cuenta_destino.get_tipo_cuenta_display }}
+                </span>
+                {% if cuenta_destino.es_usuario_alke %}
+                <span class="badge bg-success">AlkeWallet</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="mb-0">Aún no tienes cuentas destino agregadas.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Últimas transacciones</h5>
+    </div>
+    <div class="card-body">
+        {% if transacciones_recientes %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Destino / origen</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in transacciones_recientes %}
+                    <tr>
+                        <td>
+                            {{ trans.fecha|date:"d/m/Y H:i" }}
+                        </td>
+                        <td>
+                            {% if trans.tipo == 'deposito' %}
+                            <span class="badge bg-success">Depósito</span>
+                            {% elif trans.usuario_emisor == user %}
+                            <span class="badge bg-danger">Enviado</span>
+                            {% else %}
+                            <span class="badge bg-info">Recibido</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trans.tipo == 'deposito' %}--
+                            {% elif trans.usuario_emisor == user %}
+                            {{trans.cuenta_destino.alias }}
+                            {% else %}
+                            {{ trans.usuario_emisor.username }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ trans.descripcion|default:"Sin descripción" }}
+                        </td>
+                        <td>
+                            {% if trans.tipo == 'deposito' or trans.cuenta_destino.usuario_alke_relacionado == user %}
+                            <span class="text-success">+{{ trans.monto|clp }}</span>
+                            {% else %}
+                            <span class="text-danger">-{{ trans.monto|clp }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}<p class="text-muted text-center">No tienes transacciones aún.</p>{% endif %}
+    </div>
+</div>
+{% endblock %}

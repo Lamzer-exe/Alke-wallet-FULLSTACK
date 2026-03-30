@@ -1,0 +1,42 @@
+{% extends 'wallet/base.html' %} 
+{% block titulo %}Cuentas destino - AlkeWallet{% endblock %} 
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Cuentas destino</h2>
+    <a href="{% url 'agregar_cuenta_destino' %}" class="btn btn-primary">Agregar cuenta</a>
+</div>
+<div class="card">
+    <div class="card-body">
+        {% if cuentas %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Alias</th>
+                        <th>Titular</th>
+                        <th>Banco</th>
+                        <th>Tipo</th>
+                        <th>Número</th>
+                        <th>AlkeWallet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cuenta in cuentas %}
+                    <tr>
+                        <td>{{ cuenta.alias }}</td>
+                        <td>{{ cuenta.titular }}</td>
+                        <td>{{ cuenta.get_banco_display }}</td>
+                        <td>{{ cuenta.get_tipo_cuenta_display }}</td>
+                        <td>{{ cuenta.numero_cuenta }}</td>
+                        <td>{% if cuenta.es_usuario_alke %}Sí{% else %}No{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">Aún no agregas cuentas destino.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

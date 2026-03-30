@@ -1,0 +1,68 @@
+{% extends 'wallet/base.html' %}{% load clp_filters %}
+{% block titulo %}Mi Perfil - AlkeWallet{% endblock %}
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Mi perfil</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información personal</h5>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Nombre:
+                                </th>
+                                <td>
+                                    {{ usuario.first_name }} 
+                                    {{ usuario.last_name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Usuario:
+                                </th>
+                                <td>
+                                    {{ usuario.username }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Email:
+                                </th>
+                                <td>
+                                    {{ usuario.email }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Información de wallet</h5>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Saldo actual:
+                                </th>
+                                <td class="text-success fw-bold">
+                                    {{ cuenta.saldo|clp }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Cuenta creada:
+                                </th>
+                                <td>
+                                    {{ cuenta.fecha_creacion|date:"d/m/Y" }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
