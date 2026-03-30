@@ -20,3 +20,7 @@ build/
 # Archivos temporales de editores
 *~
 *.tmp
+
+
+__pycache__/
+*.pyc
